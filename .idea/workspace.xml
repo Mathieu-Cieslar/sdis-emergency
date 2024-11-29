@@ -16,6 +16,13 @@
     <pharConfigPath>$PROJECT_DIR$/Emergency-Manager/composer.json</pharConfigPath>
     <execution />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Composition API Component" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="SYNC" />
@@ -178,8 +185,21 @@
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "/Applications/PhpStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ],
+    "vue.recent.templates": [
+      "Vue Composition API Component"
+    ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Emergency-Manager/front/src/composable" />
+    </key>
+  </component>
   <component name="RunManager" selected="PHPUnit.Main">
     <configuration name="Main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner configuration_file="$PROJECT_DIR$/Emergency-Manager/phpunit.xml.dist" scope="XML" use_alternative_configuration_file="true" />
@@ -215,7 +235,7 @@
       <workItem from="1732801885318" duration="598000" />
       <workItem from="1732806477000" duration="6565000" />
       <workItem from="1732824847373" duration="2929000" />
-      <workItem from="1732828732494" duration="11361000" />
+      <workItem from="1732828732494" duration="17920000" />
     </task>
     <servers />
   </component>
