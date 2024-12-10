@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use AllowDynamicProperties;
+use App\Entity\Feu;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +23,10 @@ class Test extends AbstractController
     }
 
     #[Route(path: '/api/test', name: 'test')]
-    public function getReginaAlarms(Request $request): JsonResponse {
-
+    public function testFeu(Request $request, EntityManagerInterface $em ): JsonResponse {
+$data = $em->getRepository(Feu::class)->findAll();
             return $this->json(
-               "hello"
+               $data
             );
     }
 

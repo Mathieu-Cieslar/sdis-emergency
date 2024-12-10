@@ -142,6 +142,7 @@
       <path value="$PROJECT_DIR$/Emergency-Manager/vendor/symfony/http-foundation" />
       <path value="$PROJECT_DIR$/Emergency-Manager/vendor/symfony/http-client-contracts" />
       <path value="$PROJECT_DIR$/Emergency-Manager/vendor/symfony/property-info" />
+      <path value="$PROJECT_DIR$/Emergency-Manager/vendor/nelmio/cors-bundle" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
