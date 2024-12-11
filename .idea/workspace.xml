@@ -5,9 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f6052e2-d957-45f9-8d4b-824b191b5927" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d63d78a3-e869-42d4-b6cf-7cc0be4902d7.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/d63d78a3-e869-42d4-b6cf-7cc0be4902d7.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/d63d78a3-e869-42d4-b6cf-7cc0be4902d7/storage_v2/_src_/database/emergency_db.7HW4QQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/d63d78a3-e869-42d4-b6cf-7cc0be4902d7/storage_v2/_src_/database/emergency_db.7HW4QQ/schema/public.abK9xQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

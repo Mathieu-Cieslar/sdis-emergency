@@ -26,7 +26,7 @@ export function useLeafletMap() {
     const getFeuFromApi = async () => {
 
 
- const response = await fetch('http://localhost:8081/api/test',{method:'GET' })
+ const response = await fetch('http://localhost:8081/api/feu',{method:'GET' })
          const data = await response.json();
         console.log(data)
         return data

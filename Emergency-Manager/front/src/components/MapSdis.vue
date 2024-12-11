@@ -2,7 +2,6 @@
 import { onMounted } from 'vue'
 import { useLeafletMap } from '@/composable/useLeafletMap'
 import 'leaflet/dist/leaflet.css'
-import * as L from 'leaflet'
 
 const { initialiseMap,putFeuOnMap } = useLeafletMap()
 

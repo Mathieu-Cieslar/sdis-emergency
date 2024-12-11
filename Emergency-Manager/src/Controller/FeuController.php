@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 
 #[AllowDynamicProperties]
-class Test extends AbstractController
+class FeuController extends AbstractController
 {
     public function __construct(
 
@@ -22,12 +22,22 @@ class Test extends AbstractController
         $this->status = "ko";
     }
 
-    #[Route(path: '/api/test', name: 'test')]
-    public function testFeu(Request $request, EntityManagerInterface $em ): JsonResponse {
+    #[Route(path: '/api/feu', name: 'get_feu', methods: "GET")]
+    public function getAllFeu(Request $request, EntityManagerInterface $em ): JsonResponse {
 $data = $em->getRepository(Feu::class)->findAll();
             return $this->json(
                $data
             );
+    }
+
+    #[Route(path: '/api/feu', name: 'post_feu', methods: "POST")]
+    public function postFeu(Request $request, EntityManagerInterface $em ): JsonResponse {
+        $data = $request->toArray();
+
+
+
+
+
     }
 
 
