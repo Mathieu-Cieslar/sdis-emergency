@@ -25,6 +25,9 @@ class Caserne
     #[ORM\Column(nullable: true)]
     private ?int $nbPompier = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nom = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class Caserne
     public function setNbPompier(?int $nbPompier): static
     {
         $this->nbPompier = $nbPompier;
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(?string $nom): static
+    {
+        $this->nom = $nom;
 
         return $this;
     }
