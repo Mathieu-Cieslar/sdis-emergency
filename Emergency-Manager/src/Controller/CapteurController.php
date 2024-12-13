@@ -25,7 +25,7 @@ class CapteurController extends AbstractController
 
     #[Route(path: '/api/capteur', name: 'get_capteur', methods: "GET")]
     public function getAllCapteur(Request $request, EntityManagerInterface $em ): JsonResponse {
-$data = $em->getRepository(Feu::class)->findAll();
+$data = $em->getRepository(Capteur::class)->findAll();
             return $this->json(
                $data
             );
