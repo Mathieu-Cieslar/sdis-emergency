@@ -33,6 +33,16 @@ $data = $em->getRepository(Feu::class)->findAll();
     #[Route(path: '/api/feu', name: 'post_feu', methods: "POST")]
     public function postFeu(Request $request, EntityManagerInterface $em ): JsonResponse {
         $data = $request->toArray();
+        $feu = new Feu();
+        $feu->setCoorX($data['coorX']);
+        $feu->setCoorY($data['coorY']);
+        $feu->setIntensite($data['intensite']);
+        $em->persist($feu);
+        $em->flush();
+
+        return $this->json(
+            $data
+        );
 
 
 
