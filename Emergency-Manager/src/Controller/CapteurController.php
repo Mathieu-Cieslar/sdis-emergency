@@ -40,7 +40,7 @@ $data = $em->getRepository(Feu::class)->findAll();
         foreach ($capteurs as $capteur) {
             foreach ($data as $value){
                 if ($value['id'] == $capteur->getId()){
-                    $capteur->setIntensite($value['valeur']);
+                    $capteur->setValeur($value['valeur']);
                     $em->persist($capteur);
                     $em->flush();
                 }

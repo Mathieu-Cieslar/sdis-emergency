@@ -14,7 +14,7 @@ class Capteur
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $intensite = null;
+    private ?int $valeur = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $typeCapteur = null;
@@ -30,14 +30,14 @@ class Capteur
         return $this->id;
     }
 
-    public function getIntensite(): ?int
+    public function getValeur(): ?int
     {
-        return $this->intensite;
+        return $this->valeur;
     }
 
-    public function setIntensite(?int $intensite): static
+    public function setValeur(?int $valeur): static
     {
-        $this->intensite = $intensite;
+        $this->valeur = $valeur;
 
         return $this;
     }
