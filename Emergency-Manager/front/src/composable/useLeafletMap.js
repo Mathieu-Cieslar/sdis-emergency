@@ -12,6 +12,16 @@ export function useLeafletMap() {
         iconSize: [50, 50]
     });
 
+    const feuIcon = L.icon({
+        iconUrl: img,
+
+
+        iconSize:     [50, 50], // size of the icon
+        shadowSize:   [50, 64], // size of the shadow
+        shadowAnchor: [4, 62],  // the same for the shadow
+    });
+
+
     const initialMap = shallowRef(null)
 
 
@@ -125,14 +135,6 @@ export function useLeafletMap() {
     };
 
     const putFeuOnMap = async () => {
-        const feuIcon = L.icon({
-            iconUrl: img,
-
-
-            iconSize:     [50, 50], // size of the icon
-            shadowSize:   [50, 64], // size of the shadow
-            shadowAnchor: [4, 62],  // the same for the shadow
-        });
 
         const data = await getFeuFromApi()
         console.log(data)
@@ -144,6 +146,20 @@ export function useLeafletMap() {
             animateCamionOnRoute(startPosition, [feu.coorX, feu.coorY]); // Anime le camion vers le feu
     })
     }
+
+    const eventSource = new EventSource('http://localhost:3000/.well-known/mercure?topic=https://example.com/new-fire');
+
+    eventSource.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log('Nouvel événement Mercure reçu :', data);
+
+        // Ajouter un marqueur sur la carte avec les coordonnées reçues
+        L.marker([data.coorX, data.coorY], { icon: feuIcon }).addTo(initialMap.value);
+
+        // Simuler l'animation du camion vers ce nouveau feu
+        const startPosition = [45.7840361, 4.821052778];
+        animateCamionOnRoute(startPosition, [data.coorX, data.coorY]);
+    };
 
     return {
         initialMap,
