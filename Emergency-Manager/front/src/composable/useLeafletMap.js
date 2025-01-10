@@ -26,19 +26,23 @@ export function useLeafletMap() {
 
 
     async function getRoute(start, end) {
-        const apiKey = '5b3ce3597851110001cf62485485dd442f4f4809a5fea27879963491';
-        const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${start[1]},${start[0]}&end=${end[1]},${end[0]}`;
+        try {
+            const apiKey = '5b3ce3597851110001cf62485485dd442f4f4809a5fea27879963491';
+            const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${start[1]},${start[0]}&end=${end[1]},${end[0]}`;
 
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+        }catch (e){
+            console.error(e)
+        }
     }
     async function animateCamionOnRoute(start, end) {
         const route = await getRoute(start, end); // Obtiens le trajet
 
         const camionMarker = L.marker(start, { icon: camionIcon }).addTo(initialMap.value);
         // Ajoute la Polyline pour visualiser le trajet
-        const routeLine = L.polyline(route, { color: 'blue', weight: 4 }).addTo(initialMap.value);
+        // const routeLine = L.polyline(route, { color: 'blue', weight: 4 }).addTo(initialMap.value);
 
 
         const delay = 1000; // Durée entre chaque étape (ms)
@@ -53,30 +57,30 @@ export function useLeafletMap() {
     }
 
 
-    function interpolateCoords(from, to, steps) {
-        const deltaLat = (to[0] - from[0]) / steps;
-        const deltaLng = (to[1] - from[1]) / steps;
-
-        return Array.from({ length: steps }, (_, i) => [
-            from[0] + deltaLat * i,
-            from[1] + deltaLng * i
-        ]);
-    }
-    const animateCamion = async (start, end) => {
-        const steps = 100; // Nombre d'étapes de l'animation
-        const delay = 50;  // Durée entre chaque étape (ms)
-        const path = interpolateCoords(start, end, steps);
-
-        const camionMarker = L.marker(start, { icon: camionIcon }).addTo(initialMap.value);
-
-        for (const coord of path) {
-            camionMarker.setLatLng(coord); // Déplace le camion
-            await new Promise(resolve => setTimeout(resolve, delay)); // Pause entre chaque étape
-        }
-
-        // Optionnel : Centrer la carte sur le feu une fois arrivé
-        initialMap.value.setView(end, 14);
-    };
+    // function interpolateCoords(from, to, steps) {
+    //     const deltaLat = (to[0] - from[0]) / steps;
+    //     const deltaLng = (to[1] - from[1]) / steps;
+    //
+    //     return Array.from({ length: steps }, (_, i) => [
+    //         from[0] + deltaLat * i,
+    //         from[1] + deltaLng * i
+    //     ]);
+    // }
+    // const animateCamion = async (start, end) => {
+    //     const steps = 100; // Nombre d'étapes de l'animation
+    //     const delay = 50;  // Durée entre chaque étape (ms)
+    //     const path = interpolateCoords(start, end, steps);
+    //
+    //     const camionMarker = L.marker(start, { icon: camionIcon }).addTo(initialMap.value);
+    //
+    //     for (const coord of path) {
+    //         camionMarker.setLatLng(coord); // Déplace le camion
+    //         await new Promise(resolve => setTimeout(resolve, delay)); // Pause entre chaque étape
+    //     }
+    //
+    //     // Optionnel : Centrer la carte sur le feu une fois arrivé
+    //     initialMap.value.setView(end, 14);
+    // };
     const initialiseMap = () => {
         if (!initialMap.value) {
             // On initialise la carte
