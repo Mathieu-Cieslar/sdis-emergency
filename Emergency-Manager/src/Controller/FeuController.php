@@ -20,7 +20,8 @@ class FeuController extends AbstractController
     }
 
     #[Route(path: '/api/feu', name: 'post_feu', methods: "POST")]
-    public function postFeu(Request $request, EntityManagerInterface $em ): JsonResponse {
+    public function postFeu(\Symfony\Component\HttpFoundation\Request $request, EntityManagerInterface $em,HubInterface $hub): JsonResponse
+    {
         $data = $request->toArray();
         $feu = new Feu();
         $feu->setCoorX($data['coorX']);
@@ -29,12 +30,20 @@ class FeuController extends AbstractController
         $em->persist($feu);
         $em->flush();
 
+        // Créer un événement pour Mercure
+        $update = new Update(
+            'https://example.com/new-fire', // Sujet unique
+            json_encode(['coorX' => $data['coorX'], 'coorY' => $data['coorY'], 'nom' => 'Feu simulé'])
+        );
+        // Envoyer l'événement au Hub Mercure
+        $hub->publish($update);
+
+
         return $this->json(
             $data
         );
 
-}
-
+    }
 
 
     #[Route('/api/update', name: 'get_update', methods: ['GET'])]

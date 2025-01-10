@@ -41,8 +41,8 @@ $data = $em->getRepository(Capteur::class)->findAll();
             foreach ($data as $value){
                 if ($value['id'] == $capteur->getId()){
                     $capteur->setValeur($value['valeur']);
-                    $capteur->setCoorX($value['coorX']);
-                    $capteur->setCoorY($value['coorY']);
+                  isset($value['coorX'])  ?? $capteur->setCoorX($value['coorX']);
+                    isset($value['coorY']) ?? $capteur->setCoorY($value['coorY']);
                     $em->persist($capteur);
                     $em->flush();
                 }
