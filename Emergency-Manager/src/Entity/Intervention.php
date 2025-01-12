@@ -18,7 +18,7 @@ class Intervention
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
-    #[Ignore]
+
     private ?Feu $feu = null;
 
     /**
@@ -28,7 +28,7 @@ class Intervention
     private Collection $camions;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
-    #[Ignore]
+//    #[Ignore]
     private ?Caserne $caserne = null;
 
     #[ORM\Column(type: Types::ARRAY, nullable: true)]

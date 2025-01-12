@@ -16,6 +16,19 @@ class InterventionRepository extends ServiceEntityRepository
         parent::__construct($registry, Intervention::class);
     }
 
+
+    public function getInterWithActiveFeu(): array
+    {
+        return $this->createQueryBuilder('i')
+            ->addSelect('f') // Inclure l'entité liée "feu"
+            ->leftJoin('i.feu', 'f')
+            ->andWhere('f.status = true')
+            ->orderBy('i.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
     //    /**
     //     * @return Intervention[] Returns an array of Intervention objects
     //     */

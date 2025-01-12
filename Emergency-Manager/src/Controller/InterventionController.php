@@ -34,6 +34,14 @@ $data = $em->getRepository(Intervention::class)->findAll();
     }
 
 
+    #[Route(path: '/api/intervention/actif', name: 'get_intervention', methods: "GET")]
+    public function getInterventionActive(Request $request, EntityManagerInterface $em ): JsonResponse {
+        $data = $em->getRepository(Intervention::class)->getInterWithActiveFeu();
+        return $this->json(
+            $data
+        );
+    }
+
     #[Route(path: '/api/intervention', name: 'post_intervention', methods: "POST")]
     public function postInter(Request $request, EntityManagerInterface $em ): JsonResponse {
         $data = $request->toArray();
