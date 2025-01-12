@@ -7,6 +7,9 @@ import imgCaserne from "../assets/caserne.png"
 
 
 export function useLeafletMap() {
+    const feuMarkers = {}; // Objet pour stocker les marqueurs des feux avec un ID unique
+    const trajetLines = {}; // Objet pour stocker les lignes de trajets avec un ID unique
+
     const camionIcon = L.icon({
         iconUrl: imgCamion, // Remplace par le chemin de l'icône de ton camion
         iconSize: [50, 50]
@@ -37,15 +40,16 @@ export function useLeafletMap() {
     //         console.error(e)
     //     }
     // }
-    async function animateCamionOnRoute(trajet) {
+    async function animateCamionOnRoute(trajet,tps,id) {
         // const route = await getRoute(start, end); // Obtiens le trajet
 
         const camionMarker = L.marker(trajet[0], { icon: camionIcon }).addTo(initialMap.value);
         // Ajoute la Polyline pour visualiser le trajet
-        L.polyline(trajet, { color: 'blue', weight: 4 }).addTo(initialMap.value);
+        const trajetLine =  L.polyline(trajet, { color: 'blue', weight: 4 }).addTo(initialMap.value);
+        trajetLines[id] = trajetLine; // Stocker la ligne avec un ID
 
-
-        const delay = 1000; // Durée entre chaque étape (ms)
+        const delay = tps / trajet.length; // Durée entre chaque étape (ms)
+        console.log("delay",delay, tps, trajet.length)
 
         for (const coord of trajet.reverse()) {
             camionMarker.setLatLng(coord); // Déplace le camion au point courant
@@ -149,7 +153,8 @@ export function useLeafletMap() {
         const data = await getFeuFromApi()
         console.log(data)
         data.forEach(feu => {
-            L.marker([feu.coorX, feu.coorY], {icon : feuIcon} ).addTo(initialMap.value)
+            const feuMarker =  L.marker([feu.coorX, feu.coorY], {icon : feuIcon} ).addTo(initialMap.value)
+            feuMarkers[data.id] = feuMarker; // Stocker le marqueur avec un ID
 
             // Simuler une position de départ pour le camion
             // const startPosition = [45.84555588,4.830057141]; // Position de départ fictive
@@ -161,30 +166,55 @@ export function useLeafletMap() {
         const data = await getInterFromApi()
         console.log(data)
         data.forEach(inter => {
-             animateCamionOnRoute(inter.trajet); // Anime le camion vers le feu
+             animateCamionOnRoute(inter.trajet, inter.tempsTrajet,data.id); // Anime le camion vers le feu
         })
     }
 
     const eventSource = new EventSource('http://localhost:3000/.well-known/mercure?topic=https://example.com/new-fire');
     const eventSourceInter = new EventSource('http://localhost:3000/.well-known/mercure?topic=https://example.com/new-inter');
+    const eventSourceCloture = new EventSource('http://localhost:3000/.well-known/mercure?topic=https://example.com/new-cloture');
 
     eventSource.onmessage = (event) => {
         const data = JSON.parse(event.data);
         console.log('Nouvel événement Mercure reçu :', data);
 
         // Ajouter un marqueur sur la carte avec les coordonnées reçues
-        L.marker([data.coorX, data.coorY], { icon: feuIcon }).addTo(initialMap.value);
-
+        const feuMarker =  L.marker([data.coorX, data.coorY], { icon: feuIcon }).addTo(initialMap.value);
+        feuMarkers[data.id] = feuMarker; // Stocker le marqueur ave
         // // Simuler l'animation du camion vers ce nouveau feu
         // const startPosition = [45.7840361, 4.821052778];
         // animateCamionOnRoute(startPosition, [data.coorX, data.coorY]);
     };
 
 
+
+
     eventSourceInter.onmessage = (event) => {
         const data = JSON.parse(event.data);
         console.log('Nouvel événement Mercure reçu :', data);
-        animateCamionOnRoute(data.trajet);
+        animateCamionOnRoute(data.trajet, data.tempsTrajet,data.id);
+    };
+
+    eventSourceCloture.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log('Nouvel événement Mercure reçu :', data);
+        // Supprimer le marqueur du feu si présent
+        if (feuMarkers[data.id]) {
+            console.log("feuMarkers",feuMarkers)
+            initialMap.value.removeLayer(feuMarkers[data.id]);
+            delete feuMarkers[data.id];
+        }
+
+        // Supprimer la ligne de trajet si présente
+        if (trajetLines[data.id]) {
+            console.log("trajetLines",trajetLines)
+            initialMap.value.removeLayer(trajetLines[data.id]);
+            delete trajetLines[data.id];
+        }
+        console.log("feuMarkers",feuMarkers)
+        console.log("trajetLines",trajetLines)
+        console.log("ahhhh")
+
     };
 
     return {

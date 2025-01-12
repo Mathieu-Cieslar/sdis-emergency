@@ -18,6 +18,13 @@ class FeuController extends AbstractController
         $data = $em->getRepository(Feu::class)->findAll();
         return $this->json($data);
     }
+
+    #[Route('/api/feu/progress', name: 'get_feu_is_actif', methods: ['GET'])]
+    public function getIsActif(EntityManagerInterface $em): JsonResponse
+    {
+        $data = $em->getRepository(Feu::class)->findOneBy(['status' => true]);
+        return $this->json($data);
+    }
     #[Route('/api/feu/actif', name: 'get_feu_actif', methods: ['GET'])]
     public function getAllFeuActif(EntityManagerInterface $em): JsonResponse
     {
@@ -26,13 +33,25 @@ class FeuController extends AbstractController
     }
 
     #[Route('/api/feu/close/{id}', name: 'close_feu', methods: ['PUT'])]
-    public function closeFeu(EntityManagerInterface $em, $id): JsonResponse
+    public function closeFeu(EntityManagerInterface $em,HubInterface $hub, $id): JsonResponse
     {
         $feu = $em->getRepository(Feu::class)->findOneBy(['id' => $id]);
         $feu->setStatus(false);
         $em->persist($feu);
         $em->flush();
+
+                // Créer un événement pour Mercure
+        $update = new Update(
+            'https://example.com/new-cloture', // Sujet unique
+            json_encode(['id' => $id,  'nom' => 'cloture feu'])
+        );
+        // Envoyer l'événement au Hub Mercure
+        $hub->publish($update);
+
+
         return $this->json($feu);
+
+
     }
 
     #[Route(path: '/api/feu', name: 'post_feu', methods: "POST")]
