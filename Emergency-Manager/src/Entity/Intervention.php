@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\InterventionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InterventionRepository::class)]
@@ -26,6 +27,15 @@ class Intervention
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
     private ?Caserne $caserne = null;
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private ?array $trajet = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $tempsTrajet = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateIntervention = null;
 
     public function __construct()
     {
@@ -84,6 +94,42 @@ class Intervention
     public function setCaserne(?Caserne $caserne): static
     {
         $this->caserne = $caserne;
+
+        return $this;
+    }
+
+    public function getTrajet(): ?array
+    {
+        return $this->trajet;
+    }
+
+    public function setTrajet(?array $trajet): static
+    {
+        $this->trajet = $trajet;
+
+        return $this;
+    }
+
+    public function getTempsTrajet(): ?int
+    {
+        return $this->tempsTrajet;
+    }
+
+    public function setTempsTrajet(?int $tempsTrajet): static
+    {
+        $this->tempsTrajet = $tempsTrajet;
+
+        return $this;
+    }
+
+    public function getDateIntervention(): ?\DateTimeInterface
+    {
+        return $this->dateIntervention;
+    }
+
+    public function setDateIntervention(?\DateTimeInterface $dateIntervention): static
+    {
+        $this->dateIntervention = $dateIntervention;
 
         return $this;
     }
