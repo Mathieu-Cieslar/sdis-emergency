@@ -18,7 +18,12 @@ class FeuController extends AbstractController
         $data = $em->getRepository(Feu::class)->findAll();
         return $this->json($data);
     }
-
+    #[Route('/api/feu/actif', name: 'get_feu_actif', methods: ['GET'])]
+    public function getAllFeuActif(EntityManagerInterface $em): JsonResponse
+    {
+        $data = $em->getRepository(Feu::class)->findBy(['status' => true]);
+        return $this->json($data);
+    }
 
     #[Route('/api/feu/close/{id}', name: 'close_feu', methods: ['PUT'])]
     public function closeFeu(EntityManagerInterface $em, $id): JsonResponse
