@@ -30,6 +30,9 @@ class Feu
     #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'feu')]
     private Collection $interventions;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $status = true;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
@@ -102,6 +105,18 @@ class Feu
                 $intervention->setFeu(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?bool $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
