@@ -3,12 +3,13 @@ import { onMounted } from 'vue'
 import { useLeafletMap } from '@/composable/useLeafletMap'
 import 'leaflet/dist/leaflet.css'
 
-const { initialiseMap,putFeuOnMap,putCaserneOnMap } = useLeafletMap()
+const { initialiseMap,putFeuOnMap,putCaserneOnMap,doInter } = useLeafletMap()
 
 onMounted(() => {
   initialiseMap()
   putCaserneOnMap()
   putFeuOnMap()
+  doInter()
 
 })
 </script>

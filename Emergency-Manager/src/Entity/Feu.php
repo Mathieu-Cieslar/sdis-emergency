@@ -6,6 +6,7 @@ use App\Repository\FeuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: FeuRepository::class)]
 class Feu
@@ -28,6 +29,7 @@ class Feu
      * @var Collection<int, Intervention>
      */
     #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'feu')]
+    #[Ignore]
     private Collection $interventions;
 
     #[ORM\Column(nullable: true)]

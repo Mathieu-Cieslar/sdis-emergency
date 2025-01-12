@@ -25,35 +25,35 @@ export function useLeafletMap() {
     const initialMap = shallowRef(null)
 
 
-    async function getRoute(start, end) {
-        try {
-            const apiKey = '5b3ce3597851110001cf62485485dd442f4f4809a5fea27879963491';
-            const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${start[1]},${start[0]}&end=${end[1]},${end[0]}`;
+    // async function getRoute(start, end) {
+    //     try {
+    //         const apiKey = '5b3ce3597851110001cf62485485dd442f4f4809a5fea27879963491';
+    //         const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${start[1]},${start[0]}&end=${end[1]},${end[0]}`;
+    //
+    //         const response = await fetch(url);
+    //         const data = await response.json();
+    //         return data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+    //     }catch (e){
+    //         console.error(e)
+    //     }
+    // }
+    async function animateCamionOnRoute(trajet) {
+        // const route = await getRoute(start, end); // Obtiens le trajet
 
-            const response = await fetch(url);
-            const data = await response.json();
-            return data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
-        }catch (e){
-            console.error(e)
-        }
-    }
-    async function animateCamionOnRoute(start, end) {
-        const route = await getRoute(start, end); // Obtiens le trajet
-
-        const camionMarker = L.marker(start, { icon: camionIcon }).addTo(initialMap.value);
+        const camionMarker = L.marker(trajet[0], { icon: camionIcon }).addTo(initialMap.value);
         // Ajoute la Polyline pour visualiser le trajet
-        L.polyline(route, { color: 'blue', weight: 4 }).addTo(initialMap.value);
+        L.polyline(trajet, { color: 'blue', weight: 4 }).addTo(initialMap.value);
 
 
         const delay = 1000; // Durée entre chaque étape (ms)
 
-        for (const coord of route) {
+        for (const coord of trajet.reverse()) {
             camionMarker.setLatLng(coord); // Déplace le camion au point courant
             await new Promise(resolve => setTimeout(resolve, delay));
         }
 
         //  Centrer la carte sur le point final
-        initialMap.value.setView(end, 14);
+        initialMap.value.setView(trajet[0], 14);
     }
 
 
@@ -110,6 +110,12 @@ export function useLeafletMap() {
         console.log(data)
         return data
     }
+    const getInterFromApi = async () => {
+ const response = await fetch('http://localhost:8081/api/intervention',{method:'GET' })
+         const data = await response.json();
+        console.log(data)
+        return data
+    }
 
 
     const putCaserneOnMap = async () => {
@@ -146,12 +152,21 @@ export function useLeafletMap() {
             L.marker([feu.coorX, feu.coorY], {icon : feuIcon} ).addTo(initialMap.value)
 
             // Simuler une position de départ pour le camion
-            const startPosition = [45.84555588,4.830057141]; // Position de départ fictive
-            animateCamionOnRoute(startPosition, [feu.coorX, feu.coorY]); // Anime le camion vers le feu
+            // const startPosition = [45.84555588,4.830057141]; // Position de départ fictive
+            // animateCamionOnRoute(startPosition, [feu.coorX, feu.coorY]); // Anime le camion vers le feu
     })
+    }
+    const doInter = async () => {
+
+        const data = await getInterFromApi()
+        console.log(data)
+        data.forEach(inter => {
+             animateCamionOnRoute(inter.trajet); // Anime le camion vers le feu
+        })
     }
 
     const eventSource = new EventSource('http://localhost:3000/.well-known/mercure?topic=https://example.com/new-fire');
+    const eventSourceInter = new EventSource('http://localhost:3000/.well-known/mercure?topic=https://example.com/new-inter');
 
     eventSource.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -160,15 +175,24 @@ export function useLeafletMap() {
         // Ajouter un marqueur sur la carte avec les coordonnées reçues
         L.marker([data.coorX, data.coorY], { icon: feuIcon }).addTo(initialMap.value);
 
-        // Simuler l'animation du camion vers ce nouveau feu
-        const startPosition = [45.7840361, 4.821052778];
-        animateCamionOnRoute(startPosition, [data.coorX, data.coorY]);
+        // // Simuler l'animation du camion vers ce nouveau feu
+        // const startPosition = [45.7840361, 4.821052778];
+        // animateCamionOnRoute(startPosition, [data.coorX, data.coorY]);
+    };
+
+
+    eventSourceInter.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log('Nouvel événement Mercure reçu :', data);
+        animateCamionOnRoute(data.trajet);
     };
 
     return {
         initialMap,
         initialiseMap,
         putFeuOnMap,
-        putCaserneOnMap
+        putCaserneOnMap,
+        doInter
+
     }
 }
