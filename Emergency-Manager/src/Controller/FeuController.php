@@ -30,6 +30,8 @@ class FeuController extends AbstractController
     {
         $feu = $em->getRepository(Feu::class)->findOneBy(['id' => $id]);
         $feu->setStatus(false);
+        $em->persist($feu);
+        $em->flush();
         return $this->json($feu);
     }
 
