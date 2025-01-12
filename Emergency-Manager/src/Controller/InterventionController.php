@@ -34,7 +34,7 @@ $data = $em->getRepository(Intervention::class)->findAll();
     }
 
 
-    #[Route(path: '/api/intervention/actif', name: 'get_intervention', methods: "GET")]
+    #[Route(path: '/api/intervention/actif', name: 'get_intervention_actif', methods: "GET")]
     public function getInterventionActive(Request $request, EntityManagerInterface $em ): JsonResponse {
         $data = $em->getRepository(Intervention::class)->getInterWithActiveFeu();
         return $this->json(
