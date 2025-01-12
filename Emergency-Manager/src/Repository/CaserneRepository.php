@@ -16,6 +16,15 @@ class CaserneRepository extends ServiceEntityRepository
         parent::__construct($registry, Caserne::class);
     }
 
+    public function getCamion(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.id , c.coorX as coorX, c.coorY as coorY,c.nbPompier,c.nbCamion ,  c.nom ')
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Caserne[] Returns an array of Caserne objects
     //     */

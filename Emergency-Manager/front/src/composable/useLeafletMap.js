@@ -52,7 +52,7 @@ export function useLeafletMap() {
             await new Promise(resolve => setTimeout(resolve, delay));
         }
 
-        // Optionnel : Centrer la carte sur le point final
+        //  Centrer la carte sur le point final
         initialMap.value.setView(end, 14);
     }
 

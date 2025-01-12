@@ -6,6 +6,7 @@ use App\Repository\CaserneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 
 #[ORM\Entity(repositoryClass: CaserneRepository::class)]
 class Caserne

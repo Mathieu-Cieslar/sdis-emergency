@@ -25,7 +25,7 @@ class CaserneController extends AbstractController
 
     #[Route(path: '/api/caserne', name: 'get_caserne', methods: "GET")]
     public function getAllCaserne(Request $request, EntityManagerInterface $em ): JsonResponse {
-$data = $em->getRepository(Caserne::class)->findAll();
+$data = $em->getRepository(Caserne::class)->getCamion();
             return $this->json(
                $data
             );
