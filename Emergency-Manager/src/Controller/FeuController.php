@@ -30,13 +30,13 @@ class FeuController extends AbstractController
         $em->persist($feu);
         $em->flush();
 
-        // Créer un événement pour Mercure
-        $update = new Update(
-            'https://example.com/new-fire', // Sujet unique
-            json_encode(['coorX' => $data['coorX'], 'coorY' => $data['coorY'], 'nom' => 'Feu simulé'])
-        );
-        // Envoyer l'événement au Hub Mercure
-        $hub->publish($update);
+//        // Créer un événement pour Mercure
+//        $update = new Update(
+//            'https://example.com/new-fire', // Sujet unique
+//            json_encode(['coorX' => $data['coorX'], 'coorY' => $data['coorY'], 'nom' => 'Feu simulé'])
+//        );
+//        // Envoyer l'événement au Hub Mercure
+//        $hub->publish($update);
 
         return $this->json(
             $feu
