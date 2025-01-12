@@ -42,7 +42,7 @@ export function useLeafletMap() {
 
         const camionMarker = L.marker(start, { icon: camionIcon }).addTo(initialMap.value);
         // Ajoute la Polyline pour visualiser le trajet
-        // const routeLine = L.polyline(route, { color: 'blue', weight: 4 }).addTo(initialMap.value);
+        L.polyline(route, { color: 'blue', weight: 4 }).addTo(initialMap.value);
 
 
         const delay = 1000; // Durée entre chaque étape (ms)
@@ -146,7 +146,7 @@ export function useLeafletMap() {
             L.marker([feu.coorX, feu.coorY], {icon : feuIcon} ).addTo(initialMap.value)
 
             // Simuler une position de départ pour le camion
-            const startPosition = [45.7840361, 4.821052778]; // Position de départ fictive
+            const startPosition = [45.84555588,4.830057141]; // Position de départ fictive
             animateCamionOnRoute(startPosition, [feu.coorX, feu.coorY]); // Anime le camion vers le feu
     })
     }

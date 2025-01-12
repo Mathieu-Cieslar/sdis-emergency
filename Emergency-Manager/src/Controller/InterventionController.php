@@ -42,6 +42,9 @@ $feu = $em->getRepository(Feu::class)->findOneBy(['id' => $data['feu']['id']]);
 $caserne = $em->getRepository(Caserne::class)->findOneBy(['id' => $data['caserne']['id']]);
 $intervention->setFeu($feu);
 $intervention->setCaserne($caserne);
+$intervention->setDateIntervention(new \DateTime());
+$intervention->setTrajet($data['trajet']);
+$intervention->setTempsTrajet($data['tempsTrajet']);
         $em->persist($intervention);
         $em->flush();
         return $this->json(
