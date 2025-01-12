@@ -19,7 +19,6 @@ final class Version20250109155205 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('DELETE FROM info_capteur');
         $this->addSql('DELETE FROM capteur');
         $this->addSql(file_get_contents(__DIR__ . '/sql/capteur2.sql'));
 
