@@ -38,9 +38,8 @@ class FeuController extends AbstractController
         // Envoyer l'événement au Hub Mercure
         $hub->publish($update);
 
-
         return $this->json(
-            $data
+            $feu
         );
 
     }

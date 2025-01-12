@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CaserneRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CaserneRepository::class)]
@@ -27,6 +29,17 @@ class Caserne
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
+
+    /**
+     * @var Collection<int, Intervention>
+     */
+    #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'caserne')]
+    private Collection $interventions;
+
+    public function __construct()
+    {
+        $this->interventions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +102,36 @@ class Caserne
     public function setNom(?string $nom): static
     {
         $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): static
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setCaserne($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): static
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            // set the owning side to null (unless already changed)
+            if ($intervention->getCaserne() === $this) {
+                $intervention->setCaserne(null);
+            }
+        }
 
         return $this;
     }

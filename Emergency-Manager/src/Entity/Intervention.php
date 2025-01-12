@@ -24,6 +24,9 @@ class Intervention
     #[ORM\ManyToMany(targetEntity: Camion::class, mappedBy: 'intervention')]
     private Collection $camions;
 
+    #[ORM\ManyToOne(inversedBy: 'interventions')]
+    private ?Caserne $caserne = null;
+
     public function __construct()
     {
         $this->camions = new ArrayCollection();
@@ -69,6 +72,18 @@ class Intervention
         if ($this->camions->removeElement($camion)) {
             $camion->removeIntervention($this);
         }
+
+        return $this;
+    }
+
+    public function getCaserne(): ?Caserne
+    {
+        return $this->caserne;
+    }
+
+    public function setCaserne(?Caserne $caserne): static
+    {
+        $this->caserne = $caserne;
 
         return $this;
     }
