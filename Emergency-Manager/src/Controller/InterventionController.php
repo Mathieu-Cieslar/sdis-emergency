@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 
@@ -43,7 +45,7 @@ $data = $em->getRepository(Intervention::class)->findAll();
     }
 
     #[Route(path: '/api/intervention', name: 'post_intervention', methods: "POST")]
-    public function postInter(Request $request, EntityManagerInterface $em ): JsonResponse {
+    public function postInter(Request $request, EntityManagerInterface $em,HubInterface $hub ): JsonResponse {
         $data = $request->toArray();
 $intervention = new Intervention();
 $feu = $em->getRepository(Feu::class)->findOneBy(['id' => $data['feu']['id']]);
@@ -56,6 +58,15 @@ $intervention->setTrajet($data['trajet']);
 $intervention->setTempsTrajet($data['tempsTrajet']);
         $em->persist($intervention);
         $em->flush();
+
+
+        // Créer un événement pour Mercure
+        $update = new Update(
+            'https://example.com/new-inter', // Sujet unique
+            json_encode(['id' => $intervention->getId(), 'trajet' => $intervention->getTrajet(), 'tempsTrajet' => $intervention->getTempsTrajet()])
+        );
+        // Envoyer l'événement au Hub Mercure
+        $hub->publish($update);
         return $this->json(
             $data
         );
