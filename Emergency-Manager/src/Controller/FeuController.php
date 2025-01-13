@@ -68,7 +68,7 @@ class FeuController extends AbstractController
         // Créer un événement pour Mercure
         $update = new Update(
             'https://example.com/new-fire', // Sujet unique
-            json_encode(["id "=> $feu->getId(), 'coorX' => $data['coorX'], 'coorY' => $data['coorY'], 'nom' => 'Feu simulé'])
+            json_encode(["id"=> $feu->getId(), 'coorX' => $data['coorX'], 'coorY' => $data['coorY'], 'nom' => 'Feu simulé'])
         );
         // Envoyer l'événement au Hub Mercure
         $hub->publish($update);

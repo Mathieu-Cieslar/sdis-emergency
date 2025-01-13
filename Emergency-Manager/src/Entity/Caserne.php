@@ -39,9 +39,16 @@ class Caserne
     #[Ignore]
     private Collection $interventions;
 
+    /**
+     * @var Collection<int, Camion>
+     */
+    #[ORM\OneToMany(targetEntity: Camion::class, mappedBy: 'caserne')]
+    private Collection $camions;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
+        $this->camions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -133,6 +140,36 @@ class Caserne
             // set the owning side to null (unless already changed)
             if ($intervention->getCaserne() === $this) {
                 $intervention->setCaserne(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Camion>
+     */
+    public function getCamions(): Collection
+    {
+        return $this->camions;
+    }
+
+    public function addCamion(Camion $camion): static
+    {
+        if (!$this->camions->contains($camion)) {
+            $this->camions->add($camion);
+            $camion->setCaserne($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCamion(Camion $camion): static
+    {
+        if ($this->camions->removeElement($camion)) {
+            // set the owning side to null (unless already changed)
+            if ($camion->getCaserne() === $this) {
+                $camion->setCaserne(null);
             }
         }
 

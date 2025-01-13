@@ -52,6 +52,8 @@ $feu = $em->getRepository(Feu::class)->findOneBy(['id' => $data['feu']['id']]);
 $caserne = $em->getRepository(Caserne::class)->findOneBy(['id' => $data['caserne']['id']]);
 $intervention->setFeu($feu);
 $intervention->setCaserne($caserne);
+$intervention->setCamion($caserne->getCamions()[0]);
+$caserne->setNbCamion(0);
 $now = new \DateTime("now");
 $intervention->setDateIntervention($now);
 $intervention->setTrajet($data['trajet']);
@@ -63,7 +65,7 @@ $intervention->setTempsTrajet($data['tempsTrajet']);
         // Créer un événement pour Mercure
         $update = new Update(
             'https://example.com/new-inter', // Sujet unique
-            json_encode(['id' => $intervention->getId(), 'trajet' => $intervention->getTrajet(), 'tempsTrajet' => $intervention->getTempsTrajet()])
+            json_encode(['id' => $intervention->getId(), 'trajet' => $intervention->getTrajet(), 'tempsTrajet' => $intervention->getTempsTrajet(),"camion"=> $intervention->getCamion()->getId()])
         );
         // Envoyer l'événement au Hub Mercure
         $hub->publish($update);
