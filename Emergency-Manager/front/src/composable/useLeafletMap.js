@@ -9,6 +9,7 @@ import imgCaserne from "../assets/caserne.png"
 export function useLeafletMap() {
     const feuMarkers = {}; // Objet pour stocker les marqueurs des feux avec un ID unique
     const trajetLines = {}; // Objet pour stocker les lignes de trajets avec un ID unique
+    const camionIcons = {}; // Objet pour stocker les lignes de trajets avec un ID unique
 
     const camionIcon = L.icon({
         iconUrl: imgCamion, // Remplace par le chemin de l'icône de ton camion
@@ -44,9 +45,13 @@ export function useLeafletMap() {
         // const route = await getRoute(start, end); // Obtiens le trajet
 
         const camionMarker = L.marker(trajet[0], { icon: camionIcon }).addTo(initialMap.value);
+       camionIcons[id] = camionMarker; // Stocker la ligne avec un ID
         // Ajoute la Polyline pour visualiser le trajet
         const trajetLine =  L.polyline(trajet, { color: 'blue', weight: 4 }).addTo(initialMap.value);
         trajetLines[id] = trajetLine; // Stocker la ligne avec un ID
+
+        console.log(trajetLine, 'traj',id)
+        console.log(id,"herrre")
 
         const delay = tps / trajet.length; // Durée entre chaque étape (ms)
         console.log("delay",delay, tps, trajet.length)
@@ -154,7 +159,7 @@ export function useLeafletMap() {
         console.log(data)
         data.forEach(feu => {
             const feuMarker =  L.marker([feu.coorX, feu.coorY], {icon : feuIcon} ).addTo(initialMap.value)
-            feuMarkers[data.id] = feuMarker; // Stocker le marqueur avec un ID
+            feuMarkers[feu.id] = feuMarker; // Stocker le marqueur avec un ID
 
             // Simuler une position de départ pour le camion
             // const startPosition = [45.84555588,4.830057141]; // Position de départ fictive
@@ -166,7 +171,7 @@ export function useLeafletMap() {
         const data = await getInterFromApi()
         console.log(data)
         data.forEach(inter => {
-             animateCamionOnRoute(inter.trajet, inter.tempsTrajet,data.id); // Anime le camion vers le feu
+             animateCamionOnRoute(inter.trajet, inter.tempsTrajet,inter.id); // Anime le camion vers le feu
         })
     }
 
@@ -203,13 +208,16 @@ export function useLeafletMap() {
             console.log("feuMarkers",feuMarkers)
             initialMap.value.removeLayer(feuMarkers[data.id]);
             delete feuMarkers[data.id];
+
         }
 
         // Supprimer la ligne de trajet si présente
-        if (trajetLines[data.id]) {
+        if (trajetLines[data.idInter]) {
             console.log("trajetLines",trajetLines)
-            initialMap.value.removeLayer(trajetLines[data.id]);
-            delete trajetLines[data.id];
+            initialMap.value.removeLayer(trajetLines[data.idInter]);
+            delete trajetLines[data.idInter];
+            initialMap.value.removeLayer(camionIcons[data.idInter]);
+            delete camionIcons[data.idInter];
         }
         console.log("feuMarkers",feuMarkers)
         console.log("trajetLines",trajetLines)
